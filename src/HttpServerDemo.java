@@ -9,9 +9,6 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.Executors;
 
 public class HttpServerDemo {
     public static void main(String[] args) throws IOException {
@@ -19,7 +16,6 @@ public class HttpServerDemo {
         HttpServer server = HttpServer.create(address, 2);
 
         server.createContext("/", new MyHandler());
-        server.setExecutor(Executors.newCachedThreadPool());
         server.start();
         System.out.println("Server is listening on port 8080" );
     }
@@ -32,21 +28,12 @@ class MyHandler implements HttpHandler {
         System.out.println(requestMethod);
         if (requestMethod.equalsIgnoreCase("GET")) {
             Headers responseHeaders = exchange.getResponseHeaders();
-            responseHeaders.set("Content-Type", "text/plain");
+            responseHeaders.set("Content-Type", "text/html");
             exchange.sendResponseHeaders(200, 0);
 
             OutputStream responseBody = exchange.getResponseBody();
-            Headers requestHeaders = exchange.getRequestHeaders();
-            Set<String> keySet = requestHeaders.keySet();
-            Iterator<String> iter = keySet.iterator();
-            String s = "prasun";
+            String s = "Hello I am prasun. Wellcome to my page";
             responseBody.write(s.getBytes());
-//            while (iter.hasNext()) {
-//                String key = iter.next();
-//                List values = requestHeaders.get(key);
-//                String s = key + " = " + values.toString() + "\n";
-//                responseBody.write(s.getBytes());
-//            }
             responseBody.close();
         }
     }
